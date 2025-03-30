@@ -16,7 +16,7 @@ require('./lib/passport');
 
 //settings
 
-app.set('port',process.env.port || 4000);
+app.set('port',process.env.PORT || 4000);
 app.set('views',path.join(__dirname, 'views'))
 app.engine('.hbs',engine({
     defaultLayout: 'main',
@@ -29,7 +29,7 @@ app.set('view engine', '.hbs');
 
 //middlewares
 app.use(sesion({
-    secret: 'Stevenmysqlnodesesion',
+    secret: process.env.SESSION_SECRET || 'fallback-secret',
     resave: false,
     saveUninitialized: false,
     store: new mySQLStore(database)
@@ -66,4 +66,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(app.get('port'),()=>{
     console.log('listening on port: ', app.get('port'));
+});
+
+app.get('/api/status', (req, res) => {
+    res.json({ message: '🚀 Backend funcionando correctamente en Railway' });
 });
